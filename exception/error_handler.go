@@ -19,7 +19,7 @@ func notFoundError(writer http.ResponseWriter, request *http.Request, error inte
 	exception, ok := error.(NotFoundError)
 	if ok {
 		writer.Header().Set("Content-Type", "application/json")
-		writer.WriteHeader(http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusNotFound)
 
 		webResponse := web.WebResponse{
 			Code:   http.StatusNotFound,
