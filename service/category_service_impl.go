@@ -48,7 +48,7 @@ func (service *CategoryServiceImpl) Update(ctx context.Context, request web.Cate
 
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
-	defer helper.CommitOrRollback(tx) // TODO move commit or rollback after update
+	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, request.Id)
 	if err != nil {
@@ -58,7 +58,6 @@ func (service *CategoryServiceImpl) Update(ctx context.Context, request web.Cate
 	category.Name = request.Name
 
 	category = service.CategoryRepository.Update(ctx, tx, category)
-	// TODO commit or rollback here
 
 	return helper.ToCategoryResponse(category)
 }
@@ -66,7 +65,7 @@ func (service *CategoryServiceImpl) Update(ctx context.Context, request web.Cate
 func (service *CategoryServiceImpl) Delete(ctx context.Context, categoryId int) {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
-	defer helper.CommitOrRollback(tx) // TODO move commit or rollback after delete
+	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
 	if err != nil {
@@ -74,19 +73,17 @@ func (service *CategoryServiceImpl) Delete(ctx context.Context, categoryId int) 
 	}
 
 	service.CategoryRepository.Delete(ctx, tx, category)
-	// TODO commit or rollback here
 }
 
 func (service *CategoryServiceImpl) FindById(ctx context.Context, categoryId int) web.CategoryResponse {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
-	defer helper.CommitOrRollback(tx) // TODO move commit or rollback after found
+	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}
-	// TODO commit or rollback here
 
 	return helper.ToCategoryResponse(category)
 }
