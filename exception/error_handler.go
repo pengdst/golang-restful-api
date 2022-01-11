@@ -12,7 +12,29 @@ func ErrorHandler(writer http.ResponseWriter, request *http.Request, error inter
 		return
 	}
 
+	if validationError(writer, request, error) {
+		return
+	}
+
 	internalServerError(writer, request, error)
+}
+
+func validationError(writer http.ResponseWriter, request *http.Request, error interface{}) bool {
+	exception, ok := error.(ValidationError)
+	if ok {
+		writer.Header().Set("Content-Type", "application/json")
+		writer.WriteHeader(http.StatusNotFound)
+
+		webResponse := web.WebResponse{
+			Code:   http.StatusNotFound,
+			Status: "Not Found",
+			Data:   exception.Error,
+		}
+
+		helper.WriteToResponseBody(writer, webResponse)
+	}
+
+	return ok
 }
 
 func notFoundError(writer http.ResponseWriter, request *http.Request, error interface{}) bool {
