@@ -23,11 +23,11 @@ func validationError(writer http.ResponseWriter, request *http.Request, error in
 	exception, ok := error.(ValidationError)
 	if ok {
 		writer.Header().Set("Content-Type", "application/json")
-		writer.WriteHeader(http.StatusNotFound)
+		writer.WriteHeader(http.StatusBadRequest)
 
 		webResponse := web.WebResponse{
-			Code:   http.StatusNotFound,
-			Status: "Not Found",
+			Code:   http.StatusBadRequest,
+			Status: "Validation Error",
 			Data:   exception.Error,
 		}
 
