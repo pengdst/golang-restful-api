@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"pengdst/golang-restful-api/app"
 	"pengdst/golang-restful-api/controller"
+	"pengdst/golang-restful-api/exception"
 	"pengdst/golang-restful-api/helper"
 	"pengdst/golang-restful-api/repository"
 	"pengdst/golang-restful-api/service"
@@ -28,6 +29,8 @@ func main() {
 	router.GET("/categories/:categoryId", categoryController.FindById)
 	router.PUT("/categories/:categoryId", categoryController.Update)
 	router.DELETE("/categories/:categoryId", categoryController.Delete)
+
+	router.PanicHandler = exception.ErrorHandler
 
 	server := http.Server{
 		Addr:    "localhost:3000",
