@@ -9,6 +9,7 @@ import (
 	"pengdst/golang-restful-api/controller"
 	"pengdst/golang-restful-api/exception"
 	"pengdst/golang-restful-api/helper"
+	"pengdst/golang-restful-api/middleware"
 	"pengdst/golang-restful-api/repository"
 	"pengdst/golang-restful-api/service"
 )
@@ -34,7 +35,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    "localhost:3000",
-		Handler: router,
+		Handler: middleware.NewAuthMiddleware(router),
 	}
 
 	err := server.ListenAndServe()
