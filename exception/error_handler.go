@@ -23,8 +23,8 @@ func notFoundError(writer http.ResponseWriter, request *http.Request, error inte
 
 		webResponse := web.WebResponse{
 			Code:   http.StatusNotFound,
-			Status: exception.Error,
-			Data:   error,
+			Status: "Not Found",
+			Data:   exception.Error,
 		}
 
 		helper.WriteToResponseBody(writer, webResponse)
