@@ -27,7 +27,9 @@ func NewCategoryService(categoryRepository repository.CategoryRepository, DB *sq
 
 func (service *CategoryServiceImpl) Create(ctx context.Context, request web.CategoryCreateRequest) web.CategoryResponse {
 	err := service.Validate.Struct(request)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewValidationError(err.Error()))
+	}
 
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
@@ -44,7 +46,9 @@ func (service *CategoryServiceImpl) Create(ctx context.Context, request web.Cate
 
 func (service *CategoryServiceImpl) Update(ctx context.Context, request web.CategoryUpdateRequest) web.CategoryResponse {
 	err := service.Validate.Struct(request)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewValidationError(err.Error()))
+	}
 
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
