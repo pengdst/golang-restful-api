@@ -19,11 +19,11 @@ func init() {
 
 func main() {
 
-	db := app.NewDB()
+	db := app.NewGormDB()
 	validate := validator.New()
 
-	categortRepository := repository.NewCategoryRepository()
-	categoryService := service.NewCategoryService(categortRepository, db, validate)
+	categortRepository := repository.NewGormCategoryRepository(db)
+	categoryService := service.NewGormCategoryService(categortRepository, validate)
 	categoryController := controller.NewCategoryController(categoryService)
 
 	router := app.NewRouter(categoryController)
