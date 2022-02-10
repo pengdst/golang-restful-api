@@ -2,12 +2,22 @@ package app
 
 import (
 	"database/sql"
+	"fmt"
 	"pengdst/golang-restful-api/helper"
 	"time"
 )
 
 func NewDB() *sql.DB {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/golang-restful-api")
+	var (
+		user       = "root"
+		password   = "root"
+		dbHost     = "localhost"
+		dbPort     = "3306"
+		dbDatabase = "golang-restful-api"
+	)
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, dbHost, dbPort, dbDatabase)
+	db, err := sql.Open("mysql", dsn)
 	helper.PanicIfError(err)
 
 	db.SetMaxIdleConns(5)
