@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 	"os"
 	"pengdst/golang-restful-api/helper"
 	"time"
@@ -15,10 +16,13 @@ func NewDB() *sql.DB {
 		dbHost     = os.Getenv("DB_HOST")
 		dbPort     = os.Getenv("DB_PORT")
 		dbDatabase = os.Getenv("DB_NAME")
+		sslMode    = os.Getenv("DB_SSL_MODE")
 	)
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, dbHost, dbPort, dbDatabase)
-	db, err := sql.Open("mysql", dsn)
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		dbHost, dbPort, user, password, dbDatabase, sslMode)
+
+	db, err := sql.Open("postgres", psqlInfo)
 	helper.PanicIfError(err)
 
 	db.SetMaxIdleConns(5)
