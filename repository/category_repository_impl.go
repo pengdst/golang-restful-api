@@ -16,14 +16,11 @@ func NewCategoryRepository() CategoryRepository {
 }
 
 func (repository *CategoryRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, category domain.Category) domain.Category {
-	SQL := "insert into category(name) value (?)"
-	result, err := tx.ExecContext(ctx, SQL, category.Name)
+	SQL := "INSERT INTO category(name) VALUES ($1) RETURNING id"
+
+	err := tx.QueryRow(SQL, category.Name).Scan(&category.Id)
 	helper.PanicIfError(err)
 
-	id, err := result.LastInsertId()
-	helper.PanicIfError(err)
-
-	category.Id = int(id)
 	return category
 }
 
