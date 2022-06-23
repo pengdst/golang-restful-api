@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/go-playground/validator/v10"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	"net/http"
 	"pengdst/golang-restful-api/app"
 	"pengdst/golang-restful-api/controller"
@@ -11,6 +12,10 @@ import (
 	"pengdst/golang-restful-api/repository"
 	"pengdst/golang-restful-api/service"
 )
+
+func init() {
+	godotenv.Load(".env")
+}
 
 func main() {
 
