@@ -1,0 +1,32 @@
+###
+POST http://localhost:3000/categories
+X-API-Key: RAHASIA
+Accept: application/json
+
+{
+"name": "Test"
+}
+
+###
+GET http://localhost:3000/categories
+X-API-Key: RAHASIA
+Accept: application/json
+
+###
+GET http://localhost:3000/categories/1
+X-API-Key: RAHASIA
+Accept: application/json
+
+###
+PUT http://localhost:3000/categories/1
+X-API-Key: RAHASIA
+Accept: application/json
+
+{
+"name": "Bukan  Test"
+}
+
+###
+DELETE http://localhost:3000/categories/1
+X-API-Key: RAHASIA
+Accept: application/json
