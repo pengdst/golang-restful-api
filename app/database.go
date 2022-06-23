@@ -3,7 +3,7 @@ package app
 import (
 	"database/sql"
 	"fmt"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"os"
 	"pengdst/golang-restful-api/helper"
@@ -41,8 +41,9 @@ func NewGormDB() *gorm.DB {
 		dbDatabase = os.Getenv("DB_NAME")
 	)
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, password, dbHost, dbPort, dbDatabase)
-	gormDb, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		dbHost, dbPort, user, password, dbDatabase, "")
+	gormDb, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	helper.PanicIfError(err)
 
 	err = gormDb.AutoMigrate(&domain.Category{})
