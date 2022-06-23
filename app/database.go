@@ -3,17 +3,18 @@ package app
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"pengdst/golang-restful-api/helper"
 	"time"
 )
 
 func NewDB() *sql.DB {
 	var (
-		user       = "root"
-		password   = "root"
-		dbHost     = "localhost"
-		dbPort     = "3306"
-		dbDatabase = "golang-restful-api"
+		user       = os.Getenv("DB_USERNAME")
+		password   = os.Getenv("DB_PASSWORD")
+		dbHost     = os.Getenv("DB_HOST")
+		dbPort     = os.Getenv("DB_PORT")
+		dbDatabase = os.Getenv("DB_NAME")
 	)
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, dbHost, dbPort, dbDatabase)
