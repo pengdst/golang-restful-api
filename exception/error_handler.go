@@ -16,7 +16,27 @@ func ErrorHandler(c *gin.Context, error interface{}) {
 		return
 	}
 
+	if authorizationError(c, error) {
+		return
+	}
+
 	internalServerError(c, error)
+}
+
+func authorizationError(c *gin.Context, error interface{}) bool {
+	exception, ok := error.(AuthorizationError)
+	if ok {
+		code := http.StatusUnauthorized
+		webResponse := web.WebResponse{
+			Code:   code,
+			Status: "Bad Request",
+			Data:   exception.Error,
+		}
+
+		c.AbortWithStatusJSON(code, webResponse)
+	}
+
+	return ok
 }
 
 func validationError(c *gin.Context, error interface{}) bool {

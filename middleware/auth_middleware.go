@@ -8,6 +8,6 @@ import (
 func AuthMiddleware(c *gin.Context) {
 	auth := c.GetHeader("X-API-Key")
 	if auth != "RAHASIA" {
-		panic(exception.NewValidationError("wrong api key"))
+		panic(exception.NewAuthorizationError("wrong API Key"))
 	}
 }
