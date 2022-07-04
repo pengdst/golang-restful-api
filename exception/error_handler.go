@@ -1,69 +1,63 @@
 package exception
 
 import (
+	"github.com/gin-gonic/gin"
 	"net/http"
-	"pengdst/golang-restful-api/helper"
 	"pengdst/golang-restful-api/model/web"
 )
 
-func ErrorHandler(writer http.ResponseWriter, request *http.Request, error interface{}) {
+func ErrorHandler(c *gin.Context, error interface{}) {
 
-	if notFoundError(writer, request, error) {
+	if notFoundError(c, error) {
 		return
 	}
 
-	if validationError(writer, request, error) {
+	if validationError(c, error) {
 		return
 	}
 
-	internalServerError(writer, request, error)
+	internalServerError(c, error)
 }
 
-func validationError(writer http.ResponseWriter, _ *http.Request, error interface{}) bool {
+func validationError(c *gin.Context, error interface{}) bool {
 	exception, ok := error.(ValidationError)
 	if ok {
-		writer.Header().Set("Content-Type", "application/json")
-		writer.WriteHeader(http.StatusBadRequest)
-
+		code := http.StatusBadRequest
 		webResponse := web.WebResponse{
-			Code:   http.StatusBadRequest,
+			Code:   code,
 			Status: "Bad Request",
 			Data:   exception.Error,
 		}
 
-		helper.WriteToResponseBody(writer, webResponse)
+		c.AbortWithStatusJSON(code, webResponse)
 	}
 
 	return ok
 }
 
-func notFoundError(writer http.ResponseWriter, _ *http.Request, error interface{}) bool {
+func notFoundError(c *gin.Context, error interface{}) bool {
 	exception, ok := error.(NotFoundError)
 	if ok {
-		writer.Header().Set("Content-Type", "application/json")
-		writer.WriteHeader(http.StatusNotFound)
-
+		code := http.StatusNotFound
 		webResponse := web.WebResponse{
-			Code:   http.StatusNotFound,
+			Code:   code,
 			Status: "Not Found",
 			Data:   exception.Error,
 		}
 
-		helper.WriteToResponseBody(writer, webResponse)
+		c.AbortWithStatusJSON(code, webResponse)
 	}
 
 	return ok
 }
 
-func internalServerError(writer http.ResponseWriter, _ *http.Request, error interface{}) {
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusInternalServerError)
-
+func internalServerError(c *gin.Context, error interface{}) {
+	code := http.StatusInternalServerError
 	webResponse := web.WebResponse{
-		Code:   http.StatusInternalServerError,
+		Code:   code,
 		Status: "Internal Server Error",
 		Data:   error,
 	}
 
-	helper.WriteToResponseBody(writer, webResponse)
+	c.AbortWithStatusJSON(code, webResponse)
 }
