@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/julienschmidt/httprouter"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"pengdst/golang-restful-api/helper"
 	"pengdst/golang-restful-api/model/web"
@@ -19,76 +19,76 @@ func NewCategoryController(categoryService service.CategoryService) CategoryCont
 	}
 }
 
-func (controller *CategoryControllerImpl) Create(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func (controller *CategoryControllerImpl) Create(c *gin.Context) {
 	categoryCreateRequest := web.CategoryCreateRequest{}
-	helper.ReadFromRequestBody(request, &categoryCreateRequest)
+	c.ShouldBind(&categoryCreateRequest)
 
-	categoryResponse := controller.Service.Create(request.Context(), categoryCreateRequest)
+	categoryResponse := controller.Service.Create(c, categoryCreateRequest)
 	response := web.WebResponse{
-		Code:   200,
+		Code:   http.StatusCreated,
 		Status: "Ok",
 		Data:   categoryResponse,
 	}
 
-	helper.WriteToResponseBody(writer, response)
+	c.JSON(http.StatusCreated, response)
 }
 
-func (controller *CategoryControllerImpl) Update(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func (controller *CategoryControllerImpl) Update(c *gin.Context) {
 	categoryUpdateRequest := web.CategoryUpdateRequest{}
-	helper.ReadFromRequestBody(request, &categoryUpdateRequest)
+	c.ShouldBind(&categoryUpdateRequest)
 
-	categoryId := params.ByName("categoryId")
+	categoryId := c.Param("categoryId")
 	id, err := strconv.Atoi(categoryId)
 	helper.PanicIfError(err)
 
 	categoryUpdateRequest.Id = id
 
-	categoryResponse := controller.Service.Update(request.Context(), categoryUpdateRequest)
+	categoryResponse := controller.Service.Update(c, categoryUpdateRequest)
 	response := web.WebResponse{
-		Code:   200,
+		Code:   http.StatusOK,
 		Status: "Ok",
 		Data:   categoryResponse,
 	}
 
-	helper.WriteToResponseBody(writer, response)
+	c.JSON(http.StatusOK, response)
 }
 
-func (controller *CategoryControllerImpl) Delete(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	categoryId := params.ByName("categoryId")
+func (controller *CategoryControllerImpl) Delete(c *gin.Context) {
+	categoryId := c.Param("categoryId")
 	id, err := strconv.Atoi(categoryId)
 	helper.PanicIfError(err)
 
-	controller.Service.Delete(request.Context(), id)
+	controller.Service.Delete(c, id)
 	response := web.WebResponse{
-		Code:   200,
+		Code:   http.StatusOK,
 		Status: "Ok",
 	}
 
-	helper.WriteToResponseBody(writer, response)
+	c.JSON(http.StatusOK, response)
 }
 
-func (controller *CategoryControllerImpl) FindById(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	categoryId := params.ByName("categoryId")
+func (controller *CategoryControllerImpl) FindById(c *gin.Context) {
+	categoryId := c.Param("categoryId")
 	id, err := strconv.Atoi(categoryId)
 	helper.PanicIfError(err)
 
-	categoryResponse := controller.Service.FindById(request.Context(), id)
+	categoryResponse := controller.Service.FindById(c, id)
 	response := web.WebResponse{
-		Code:   200,
+		Code:   http.StatusOK,
 		Status: "Ok",
 		Data:   categoryResponse,
 	}
 
-	helper.WriteToResponseBody(writer, response)
+	c.JSON(http.StatusOK, response)
 }
 
-func (controller *CategoryControllerImpl) GetAll(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	categoryResponses := controller.Service.GetAll(request.Context())
+func (controller *CategoryControllerImpl) GetAll(c *gin.Context) {
+	categoryResponses := controller.Service.GetAll(c)
 	response := web.WebResponse{
-		Code:   200,
+		Code:   http.StatusOK,
 		Status: "Ok",
 		Data:   categoryResponses,
 	}
 
-	helper.WriteToResponseBody(writer, response)
+	c.JSON(http.StatusOK, response)
 }
