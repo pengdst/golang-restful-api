@@ -3,9 +3,9 @@ package app
 import (
 	"database/sql"
 	"fmt"
-	"os"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"os"
 	"pengdst/golang-restful-api/helper"
 	"pengdst/golang-restful-api/model/domain"
 	"time"
@@ -34,11 +34,11 @@ func NewDB() *sql.DB {
 
 func NewGormDB() *gorm.DB {
 	var (
-		user       = "root"
-		password   = "root"
-		dbHost     = "localhost"
-		dbPort     = "3306"
-		dbDatabase = "golang-restful-api"
+		user       = os.Getenv("DB_USERNAME")
+		password   = os.Getenv("DB_PASSWORD")
+		dbHost     = os.Getenv("DB_HOST")
+		dbPort     = os.Getenv("DB_PORT")
+		dbDatabase = os.Getenv("DB_NAME")
 	)
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, password, dbHost, dbPort, dbDatabase)
